@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Stocks</title>
+    <style>
+        .stock-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .stock-table th, .stock-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        .stock-table th {
+            background-color: #f2f2f2;
+        }
+        .search-form {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .search-input {
+            padding: 8px;
+            width: 300px;
+            font-size: 16px;
+        }
+        .search-button {
+            padding: 8px 16px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>My Stock Information</h1>
+
+    <div class="search-form">
+        <form action="/myinfo/mystock" method="GET">
+            <input type="text" name="search" placeholder="Search by stock name" value="<%= typeof search_keyword !== 'undefined' ? search_keyword : '' %>">
+            <button type="submit" class="search-button">Search</button>
+        </form>
+    </div>
+
+    <table class="stock-table">
+        <thead>
+            <tr>
+                <th>Stock Name</th>
+                <th>Average Buying Price</th>
+                <th>Current Price</th>
+                <th>Number of Stocks</th>
+                <th>Tradable Stocks</th>
+                <th>Profit</th>
+                <th>Fluctuation Rate (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (stocks && stocks.length > 0) { %>
+                <% stocks.forEach(stock => { %>
+                    <tr>
+                        <td><%= stock.name %></td>
+                        <td><%= stock.avg_buying_price.toFixed(2) %>원</td>
+                        <td><%= stock.current_price %>원</td>
+                        <td><%= stock.num_of_stocks %></td>
+                        <td><%= stock.num_tradable %></td>
+                        <td><%= stock.profit.toFixed(2) %>원</td>
+                        <td><%= stock.fluctuation_rate %> %</td>
+                    </tr>
+                <% }) %>
+            <% } else { %>
+                <tr>
+                    <td colspan="7">No stocks found</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= stockInfo.name %> 호가</title>
+    <style>
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .order-table th, .order-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        .order-table th {
+            background-color: #f2f2f2;
+        }
+        .sell-orders {
+            color: blue;
+        }
+        .buy-orders {
+            color: red;
+        }
+        .stock-info {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1><%= stockInfo.name %></h1>
+
+    <div class="stock-info">
+        <p><strong>업종:</strong> <%= stockInfo.sector %></p>
+        <p><strong>현재가:</strong> <%= stockInfo.current_price %>원</p>
+        <p><strong>전일 종가:</strong> <%= stockInfo.closing_price %>원</p>
+        <p><strong>등락률:</strong> <%= stockInfo.rate_of_change %>%</p>
+    </div>
+
+    <div style="display: flex; align-items: center;">
+        <h2>호가</h2>
+        <h3 style="margin-left: 20px;">
+            <a href="/stock/details/<%= stockInfo.stock_code %>">체결</a>
+        </h3>
+    </div>
+
+    <h3>실시간</h3>
+
+    <table class="order-table">
+        <thead>
+            <tr>
+                <th>매도잔량</th>
+                <th>매도호가</th>
+                <th>매수호가</th>
+                <th>매수잔량</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (let i = 4; i >= 0; i--) { %>
+                <tr>
+                    <td class="sell-orders">
+                        <%= sellOrderList[i] ? sellOrderList[i].total_quantity : '' %>
+                    </td>
+                    <td class="sell-orders">
+                        <%= sellOrderList[i] ? sellOrderList[i].price : '' %>
+                    </td>
+                    
+                    <td colspan="2"></td>
+                </tr>
+            <% } %>
+
+            <% for (let i = 0; i < 5; i++) { %>
+                <tr>
+                    <td colspan="2"></td>
+
+                    <td class="buy-orders">
+                        <%= buyOrderList[i] ? buyOrderList[i].price : '' %>
+                    </td>
+                    <td class="buy-orders">
+                        <%= buyOrderList[i] ? buyOrderList[i].total_quantity : '' %>
+                    </td>
+                </tr>
+            <% } %>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th class="sell-orders">
+                    <%= sellTotalQuantity %>
+                </th>
+                <th colspan="2">잔량합계</th>
+                <th class="buy-orders">
+                    <%= buyTotalQuantity %>
+                </th>
+            </tr>
+        </tfoot>
+    </table>
+</body>
+</html>

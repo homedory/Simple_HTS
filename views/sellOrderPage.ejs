@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sell Order</title>
+    <style>
+        .order-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .order-info {
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .order-info p {
+            margin: 5px 0;
+        }
+        .order-form {
+            display: flex;
+            flex-direction: column;
+        }
+        .order-form label {
+            margin-top: 10px;
+        }
+        .order-form input[type="number"] {
+            padding: 8px;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        .price-type-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .price-type-buttons button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px;
+            cursor: pointer;
+            flex: 1;
+        }
+        .order-button {
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 18px;
+            background-color: #21ca48;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .order-button:disabled {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
+        .buy-order-button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 8px 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .buy-order-button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="order-container">
+        <div class="order-info">
+            <h2>매도 주문</h2>
+            <a href="/trading/buy-order/<%= stockInfo.stock_code %>" class="buy-order-button">매수 주문</a>
+            <p><strong>현재가:</strong> <%= stockInfo.current_price %>원</p>
+            <p><strong>등락률:</strong> <%= rateOfChange %>%</p>
+        </div>
+
+        <div class="price-type-buttons">
+            <button type="button" onclick="setPriceType('LIMIT')">지정가</button>
+            <button type="button" onclick="setPriceType('MARKET')">시장가</button>
+        </div>
+
+        <form class="order-form" action="/trading/sell-order/<%= stockInfo.stock_code %>" method="POST">
+            <input type="hidden" id="priceType" name="priceType" value="LIMIT">
+
+            <label for="price">가격 (원):</label>
+            <input type="number" id="price" name="price" required min="1" step="1">
+
+            <label for="quantity">수량:</label>
+            <input 
+                type="number" 
+                id="quantity" 
+                name="quantity" 
+                required 
+                min="1" 
+                step="1"
+                oninput="validateQuantity()"
+            >
+
+            <button type="submit" class="order-button">매도</button>
+        </form>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+
+        if (status === 'success') {
+            alert('매도 주문 성공!');
+        } else if (status === 'fail') {
+            alert('주문 실패, 다시 시도해주세요');
+        }
+
+        const currentPrice = <%= stockInfo.current_price %>;
+
+        document.getElementById("quantity").max = <%= orderableQuantity %>;
+        
+        function setPriceType(type) {
+            const priceInput = document.getElementById("price");
+            const priceTypeInput = document.getElementById("priceType");
+
+            priceTypeInput.value = type;
+
+            if (type === 'MARKET') {
+                priceInput.value = currentPrice;
+                priceInput.readOnly = true;
+            } else {
+                priceInput.value = '';
+                priceInput.readOnly = false;
+            }
+        }
+
+        function validateQuantity() {
+            const quantityInput = document.getElementById("quantity");
+            const orderButton = document.querySelector(".order-button");
+            
+            if (parseInt(quantityInput.value) > <%= orderableQuantity %>) {
+                quantityInput.setCustomValidity("Quantity cannot exceed orderable quantity.");
+                orderButton.disabled = true;
+            } else {
+                quantityInput.setCustomValidity("");
+                orderButton.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
