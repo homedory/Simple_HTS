@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Balance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+        .balance {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .buttons {
+            display: flex;
+            gap: 15px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <% if (typeof requestResponse !== 'undefined' && requestResponse === 'fail') { %>
+        <script>alert("<%= message %>");</script>
+    <% } %>
+
+    <div class="balance">
+        잔고: <%= balance %> won
+    </div>
+
+    <div class="withdrawal">
+        <h2>인출</h2>
+        <form action="/myinfo/withdrawal" method="POST">
+            <input type="number" name="amount" placeholder="인출 금액을 입력하세요" 
+                   min="0" step="1000" required>
+            <button type="submit">Withdraw</button>
+        </form>
+    </div>
+
+    <div class="deposit">
+        <h2>입금</h2>
+        <form action="/myinfo/deposit" method="POST">
+            <input type="number" name="amount" placeholder="입금 금액을 입력하세요" 
+                   min="0" step="1000" required>
+            <button type="submit">Deposit</button>
+        </form>
+    </div>
+
+    <div class="buttons">
+        <button onclick="location.href='/myinfo/mystock'">My Stock</button>
+        <button onclick="location.href='/myinfo/history'">Trading History</button>
+    </div>
+</body>
+</html>

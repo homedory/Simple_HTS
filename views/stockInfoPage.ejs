@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= stockInfo.name %> 상세정보</title>
+    <style>
+        .transaction-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .transaction-table th, .transaction-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        .transaction-table th {
+            background-color: #f2f2f2;
+        }
+        .stock-info {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .order-button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .order-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><%= stockInfo.name %></h1>
+        <a href="/trading/buy-order/<%= stockInfo.stock_code %>" class="order-button">주문</a>    </div>
+
+    <div class="stock-info">
+        <p><strong>업종:</strong> <%= stockInfo.sector %></p>
+        <p><strong>현재가:</strong> <%= stockInfo.current_price %>원</p>
+        <p><strong>전일 종가:</strong> <%= stockInfo.closing_price %>원</p>
+        <p><strong>등락률:</strong> <%= stockInfo.rate_of_change %>%</p>
+    </div>
+
+    <div style="display: flex; align-items: center;">
+        <h2>체결</h2>
+        <h3 style="margin-left: 20px;">
+            <a href="/stock/order_book/<%= stockInfo.stock_code %>">호가</a>
+        </h3>
+    </div>
+    
+    <h3>최근 일주일</h3>
+    <table class="transaction-table">
+        <thead>
+            <tr>
+                <th>체결가</th>
+                <th>체결량</th>
+                <th>날짜</th>
+                <th>시간</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (transactionList && transactionList.length > 0) { %>
+                <% transactionList.forEach(transaction => { %>
+                    <tr>
+                        <td><%= transaction.price %>원</td>
+                        <td><%= transaction.quantity %></td>
+                        <td><%= transaction.date %></td>
+                        <td><%= transaction.time %></td>
+                    </tr>
+                <% }) %>
+            <% } else { %>
+                <tr>
+                    <td colspan="4">No transactions found</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+</body>
+</html>

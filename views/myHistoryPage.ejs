@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Transaction History</title>
+    <style>
+        .transaction-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .transaction-table th, .transaction-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        .transaction-table th {
+            background-color: #f2f2f2;
+        }
+        .search-form {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .search-input, .date-input {
+            padding: 8px;
+            width: 200px;
+            font-size: 16px;
+            margin-right: 5px;
+        }
+        .search-button {
+            padding: 8px 16px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>My Transaction History</h1>
+
+    <div class="search-form">
+        <form action="/myinfo/history" method="GET">
+            <input type="text" name="search" placeholder="Search by stock name" value="<%= typeof search_keyword !== 'undefined' ? search_keyword : '' %>">
+            <input type="date" name="start_date" class="date-input" placeholder="Start Date" value="<%= typeof start_date !== 'undefined' ? start_date : '' %>">
+            <input type="date" name="end_date" class="date-input" placeholder="End Date" value="<%= typeof end_date !== 'undefined' ? end_date : '' %>">
+            <button type="submit" class="search-button">Search</button>
+        </form>
+    </div>
+
+    <table class="transaction-table">
+        <thead>
+            <tr>
+                <th>Stock Name</th>
+                <th>Type</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Date</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (transactionHistory && transactionHistory.length > 0) { %>
+                <% transactionHistory.forEach(transaction => { %>
+                    <tr>
+                        <td><%= transaction.stock_name %></td>
+                        <td><%= transaction.type %></td>
+                        <td><%= transaction.price %>원</td>
+                        <td><%= transaction.quantity %></td>
+                        <td><%= transaction.date %></td>
+                        <td><%= transaction.time %></td>
+                    </tr>
+                <% }) %>
+            <% } else { %>
+                <tr>
+                    <td colspan="6">No transactions found</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+</body>
+</html>
