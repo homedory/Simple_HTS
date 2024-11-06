@@ -16,7 +16,7 @@ router.get("/", (req, res) => {
         queryParams.push(`%${searchKeyword}%`);
     }
 
-    sql_connection.query(stockListQuery, queryParams, (error, results) => {
+    query(stockListQuery, queryParams, (error, results) => {
         if (error) {
             console.error("DB error:", error);
             res.status(500).send("Server error");
@@ -48,9 +48,7 @@ router.get("/details/:stock_code", async (req, res) => {
         stockInfo["rate_of_change"] = rateOfChange;
 
         // Get transaction list
-        let startDate = new Date();
-        startDate.setDate(startDate.getDate() - 7);
-        const oneWeekAgo = startDate.toISOString();
+        const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
         const transactions = await query(`
             SELECT transaction.price AS price, transaction.quantity AS quantity, transaction.time AS time 
@@ -130,6 +128,39 @@ router.get("/order_book/:stock_code", async (req, res) => {
         console.error("DB error:", error);
         res.status(500).send("Server error");
     }
+});
+
+
+router.get("/top-rising", (req, res) => {
+
+    const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+    let stockListQuery = `
+        SELECT stock_code, name, stock.current_price AS current_price,
+            (stock.current_price - stock_info.closing_price) / stock_info.closing_price * 100 AS rate_of_change
+        FROM stock INNER JOIN stock_info USING (stock_code)
+        WHERE date = ?
+        ORDER BY rate_of_change DESC;        
+    `;
+
+    query(stockListQuery, [oneWeekAgo], (error, results) => {
+        if (error) {
+            console.error("DB error:", error);
+            res.status(500).send("Server error");
+        }
+
+        const stockList = results.map(stock => {
+
+            return {
+                name: stock.name,
+                stock_code: stock.stock_code,
+                current_price: stock.current_price,
+                rate_of_change: Number(stock.rate_of_change).toFixed(2)
+            }
+        });
+
+        res.render("topRisingStocksPage", { stockList });
+    });  
 });
 
 

@@ -27,10 +27,31 @@
             margin-top: 20px;
             text-align: center;
         }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .order-button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .order-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
-    <h1><%= stockInfo.name %></h1>
+    <div class="header">
+        <h1><%= stockInfo.name %></h1>
+        <a href="/trading/buy-order/<%= stockInfo.stock_code %>" class="order-button">주문</a>    
+    </div>
 
     <div class="stock-info">
         <p><strong>업종:</strong> <%= stockInfo.sector %></p>

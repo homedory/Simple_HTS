@@ -2,34 +2,94 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Initial page</title>
+    <title>Home Trading System</title>
+    <style>
+        h1 {
+            text-align: center;
+            margin-top: 50px;
+            font-family: Arial, sans-serif;
+        }
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .button {
+            font-size: 16px;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 200px;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+    </style>
 </head>
 <body>
     <h1>Home Trading System</h1>
-    <button id="login">로그인</button>
-    <button id="signup">회원가입</button>
-    <button id="myinfo">내정보</button>
-    <button id="stock">거래가능한 종목 보기</button>
+    <div class="buttons-container">
+        <% if (!isLoggedIn) { %>
+            <button id="login" class="button">로그인</button>
+            <button id="signup" class="button">회원가입</button>
+        <% } else { %>
+            <button id="myinfo" class="button">내정보</button>
+            <button id="logout" class="button">로그아웃</button>
+        <% } %>
+        <button id="stock" class="button">거래가능한 종목 보기</button>
+        <button id="topRising" class="button">주가 상승률 순위</button>
+    </div>
+
     <script>
+        const isLoggedIn = <%= JSON.stringify(isLoggedIn) %>;
+        
         const loginButton = document.getElementById("login");
         const signupButton = document.getElementById("signup");
         const myinfoButton = document.getElementById("myinfo");
+        const logoutButton = document.getElementById("logout");
         const allStocksButton = document.getElementById("stock");
+        const topRisingButton = document.getElementById("topRising");
 
-        loginButton.addEventListener('click', () => {
-            window.location = 'http://localhost:3000/login';
+        if (isLoggedIn) {
+            myinfoButton.addEventListener("click", () => {
+                window.location = "http://localhost:3000/myinfo";
+            });
+            logoutButton.addEventListener("click", () => {
+                window.location = "http://localhost:3000/logout";
+            });
+        } else {
+            loginButton.addEventListener("click", () => {
+                window.location = "http://localhost:3000/login";
+            });
+            signupButton.addEventListener("click", () => {
+                window.location = "http://localhost:3000/signup";
+            });
+        }
+
+        allStocksButton.addEventListener("click", () => {
+            window.location = "http://localhost:3000/stock";
         });
-
-        signupButton.addEventListener('click', () => {
-            window.location = 'http://localhost:3000/signup';
-        });
-
-        myinfoButton.addEventListener('click', () => {
-            window.location = 'http://localhost:3000/myinfo';
-        });
-
-        allStocksButton.addEventListener('click', () => {
-            window.location = 'http://localhost:3000/stock';
+        topRisingButton.addEventListener("click", () => {
+            window.location = "http://localhost:3000/stock/top-rising";
         });
     </script>
 </body>
