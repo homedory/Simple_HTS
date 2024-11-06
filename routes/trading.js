@@ -9,7 +9,7 @@ const { executeBuyOrder, executeSellOrder } = require("../transaction");
 
 router.get("/buy-order/:stock_code", async (req, res) => {
     if (!req.session.userID) {
-        return res.status(401).send("Unauthorized User, Please sign in.");
+        return res.redirect("/login");
     }
 
     const stockCode = req.params.stock_code;
@@ -32,7 +32,7 @@ router.get("/buy-order/:stock_code", async (req, res) => {
 
 router.post("/buy-order/:stock_code", async (req, res) => {
     if (!req.session.userID) {
-        return res.status(401).send("Unauthorized User, Please sign in.");
+        return res.redirect("/login");
     }
 
     const accountInfo = (await query(`SELECT * FROM account INNER JOIN user USING (user_id) WHERE user_id = ?`,[req.session.userID]))[0];
@@ -58,13 +58,19 @@ router.post("/buy-order/:stock_code", async (req, res) => {
                 [accountInfo.account_id, stockCode, currentDateTime, quantity, 'BUY', priceType, price, 'UNEXECUTED']
             );
 
+            console.log("buy order: decrement balance", Number(price)*Number(quantity));
             // Decrement available balance
-            await query(`
+            const result = await query(`
                 UPDATE account
                 SET account_balance = account_balance - ?
                 WHERE account_id = ?`,
-                [price*quantity, accountInfo.account_id]
+                [Number(price)*Number(quantity), accountInfo.account_id]
             );
+
+            console.log(result);
+
+            const [balanceAfterUpdate] = await query(`SELECT account_balance FROM account WHERE account_id = ?`, [accountInfo.account_id]);
+            console.log("Balance after update:", balanceAfterUpdate.account_balance);
         }
 
         await executeBuyOrder(results.insertId);
@@ -79,7 +85,7 @@ router.post("/buy-order/:stock_code", async (req, res) => {
 
 router.get("/sell-order/:stock_code", async (req, res) => {
     if (!req.session.userID) {
-        return res.status(401).send("Unauthorized User, Please sign in.");
+        return res.redirect("/login");
     }
 
     const stockCode = req.params.stock_code;
@@ -114,7 +120,7 @@ router.get("/sell-order/:stock_code", async (req, res) => {
 
 router.post("/sell-order/:stock_code", async (req, res) => {
     if (!req.session.userID) {
-        return res.status(401).send("Unauthorized User, Please sign in.");
+        return res.redirect("/login");
     }
 
     const accountInfo = (await query(`SELECT * FROM account INNER JOIN user USING (user_id) WHERE user_id = ?`,[req.session.userID]))[0];

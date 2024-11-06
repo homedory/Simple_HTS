@@ -35,7 +35,7 @@
     <% } %>
 
     <div class="balance">
-        잔고: <%= balance %> won
+        예수금: <%= balance %>원
     </div>
 
     <div class="withdrawal">
@@ -43,7 +43,7 @@
         <form action="/myinfo/withdrawal" method="POST">
             <input type="number" name="amount" placeholder="인출 금액을 입력하세요" 
                    min="0" step="1000" required>
-            <button type="submit">Withdraw</button>
+            <button type="submit">인출</button>
         </form>
     </div>
 
@@ -52,13 +52,13 @@
         <form action="/myinfo/deposit" method="POST">
             <input type="number" name="amount" placeholder="입금 금액을 입력하세요" 
                    min="0" step="1000" required>
-            <button type="submit">Deposit</button>
+            <button type="submit">입금</button>
         </form>
     </div>
 
     <div class="buttons">
-        <button onclick="location.href='/myinfo/mystock'">My Stock</button>
-        <button onclick="location.href='/myinfo/history'">Trading History</button>
+        <button onclick="location.href='/myinfo/mystock'">보유 주식</button>
+        <button onclick="location.href='/myinfo/history'">거래 내역</button>
     </div>
 </body>
 </html>

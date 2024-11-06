@@ -8,7 +8,7 @@ const query = util.promisify(sql_connection.query).bind(sql_connection);
 
 router.get("/", (req, res) => {
     if (!req.session.userID) {
-        return res.status(401).send("Unauthorized: Please sign in.");
+        return res.redirect("/login");
     }
     let balance = 0;
     let message = req.session.message || null;
@@ -32,7 +32,7 @@ router.get("/", (req, res) => {
 
 router.post("/withdrawal", async (req, res) => {
     if (!req.session.userID) {
-        return res.status(401).send("Unauthorized User, Please sign in.");
+        return res.redirect("/login");
     }
 
     const {amount} = req.body;
@@ -47,16 +47,16 @@ router.post("/withdrawal", async (req, res) => {
 
         // Check withdrawal amount
         if (amount > balance) {
-            req.session.message = "Insufficient balance";
+            req.session.message = "잔고 부족";
             req.session.requestResponse = 'fail';
-            return res.render("myinfoPage", { requestResponse: 'fail', message: "Insufficient balance", balance: balance });
+            return res.render("myinfoPage", { requestResponse: 'fail', message: "잔고 부족", balance: balance });
         }
 
         // Update balance
         const newBalance = balance - amount;
         query('UPDATE account SET account_balance = ? WHERE user_id = ?', [newBalance, req.session.userID]);
 
-        req.session.message = "Withdrawal successful";
+        req.session.message = "인출 성공";
         req.session.withdrawalResult = 'success';
         res.redirect('/myinfo')
     } catch (error) {
@@ -68,7 +68,7 @@ router.post("/withdrawal", async (req, res) => {
 
 router.post("/deposit", async (req, res) => {
     if (!req.session.userID) {
-        return res.status(401).send("Unauthorized User, Please sign in.");
+        return res.redirect("/login");
     }
 
     const {amount} = req.body;
@@ -96,7 +96,7 @@ router.post("/deposit", async (req, res) => {
 
 router.get("/mystock", async (req, res) => {
     if (!req.session.userID) {
-        return res.status(401).send("Unauthorized User, Please sign in.");
+        return res.redirect("/login");
     }
 
     const search_keyword = req.query.search;
@@ -105,7 +105,7 @@ router.get("/mystock", async (req, res) => {
         const account = await query('SELECT * FROM account WHERE user_id = ? LIMIT 1', [req.session.userID]);
         const accountId = account[0].account_id;
 
-        let stockListQuery = 'SELECT * FROM has_stock INNER JOIN stock USING (stock_code) WHERE account_id = ? AND number_of_shares > 0';
+        let stockListQuery = 'SELECT * FROM has_stock INNER JOIN stock USING (stock_code) WHERE account_id = ? AND num_of_shares > 0';
         const queryParams = [accountId];
 
         if (search_keyword) {
@@ -124,7 +124,7 @@ router.get("/mystock", async (req, res) => {
 
         const stocks = stockList.map(stock => {
             const profit = (stock.current_price - stock.avg_price) * stock.num_of_shares;
-            const fluctuationRate = ((stock.current_price - stock.avg_price) / stock.avg_price * 100).toFixed(2);
+            const profitRate = ((stock.current_price - stock.avg_price) / stock.avg_price * 100).toFixed(2);
             const tradableQuantity = stock.num_of_shares - ((orderList.find(q => q.stock_code === stock.stock_code) || {}).ordered_quantity || 0);
             
             return {
@@ -134,7 +134,7 @@ router.get("/mystock", async (req, res) => {
                 num_of_stocks: stock.num_of_shares,
                 num_tradable: tradableQuantity,
                 profit: profit,
-                fluctuation_rate: fluctuationRate
+                profit_rate: profitRate
             };
         });
 
@@ -149,7 +149,7 @@ router.get("/mystock", async (req, res) => {
 
 router.get("/history", async (req, res) => {
     if (!req.session.userID) {
-        return res.status(401).send("Unauthorized User, Please sign in.");
+        return res.redirect("/login");
     }
 
     const search_keyword = req.query.search;

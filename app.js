@@ -20,14 +20,21 @@ app.set("view engine", "ejs");
 app.set("views", "./views");
 
 app.get("/", (req, res) => {
-    res.render("app");
+    const isLoggedIn = req.session.userID ? true : false;;
+    res.render("app", { isLoggedIn });
 });
 
 const loginRoute = require("./routes/login");
 app.use("/login", loginRoute);
 
+const logoutRoute = require("./routes/logout");
+app.use("/logout", logoutRoute);
+
 const signupRoute = require("./routes/signup");
 app.use("/signup", signupRoute);
+
+const userdeleteRoute = require("./routes/userdelete");
+app.use("/userdelete", userdeleteRoute);
 
 const myinfoRoute = require("./routes/myinfo");
 app.use("/myinfo", myinfoRoute);

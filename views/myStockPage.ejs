@@ -34,7 +34,7 @@
     </style>
 </head>
 <body>
-    <h1>My Stock Information</h1>
+    <h1>보유 주식</h1>
 
     <div class="search-form">
         <form action="/myinfo/mystock" method="GET">
@@ -46,13 +46,13 @@
     <table class="stock-table">
         <thead>
             <tr>
-                <th>Stock Name</th>
-                <th>Average Buying Price</th>
-                <th>Current Price</th>
-                <th>Number of Stocks</th>
-                <th>Tradable Stocks</th>
-                <th>Profit</th>
-                <th>Fluctuation Rate (%)</th>
+                <th>종목명</th>
+                <th>매입 단가</th>
+                <th>현재가</th>
+                <th>보유 수량</th>
+                <th>거래가능 수량</th>
+                <th>평가손익</th>
+                <th>수익률(%)</th>
             </tr>
         </thead>
         <tbody>
@@ -60,12 +60,12 @@
                 <% stocks.forEach(stock => { %>
                     <tr>
                         <td><%= stock.name %></td>
-                        <td><%= stock.avg_buying_price.toFixed(2) %>원</td>
+                        <td><%= stock.avg_buying_price.toFixed(0) %>원</td>
                         <td><%= stock.current_price %>원</td>
                         <td><%= stock.num_of_stocks %></td>
                         <td><%= stock.num_tradable %></td>
-                        <td><%= stock.profit.toFixed(2) %>원</td>
-                        <td><%= stock.fluctuation_rate %> %</td>
+                        <td><%= stock.profit.toFixed(0) %>원</td>
+                        <td><%= stock.profit_rate %> %</td>
                     </tr>
                 <% }) %>
             <% } else { %>

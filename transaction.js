@@ -174,7 +174,8 @@ async function executeBuyOrder(orderId) {
     
     // Update buyer(current orderer)'s account balance
     if (order.price_type === 'LIMIT') {
-        const redundantAmount = Number(order.price) * Number(order.quantity) - totalTransactionAmount;
+        const redundantAmount = Number(order.price) * (Number(order.quantity) - remainQuantity) - totalTransactionAmount;
+        console.log("redundantAmout:", redundantAmount);
         await query(`
             UPDATE account SET account_balance = account_balance + ? WHERE account_id = ?`,
             [redundantAmount, order.account_id]

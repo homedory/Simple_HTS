@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Delete Page</title>
+</head>
+<body>
+    <h1>회원 탈퇴</h1>
+    <form method="post" action="/user-delete">
+        <table>
+            <tr>
+                <td><label for="password">비밀번호</label></td>
+                <td>
+                    <input type="password" id="password" name="password" required>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="submit">삭제하기</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+
+        if (status === 'password_error') {
+            alert('비밀번호 오류, 다시 입력해주세요');
+        }
+        else if (status === 'fail') {
+            alert('회원 탈퇴 실패, 다시 시도해주세요');
+        }
+    </script>
+
+</body>
+</html>
