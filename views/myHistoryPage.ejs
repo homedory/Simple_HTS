@@ -32,14 +32,37 @@
             padding: 8px 16px;
             font-size: 16px;
         }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .info-button {
+            position: absolute;
+            left: 0;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .info-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
-    <h1>거래 내역</h1>
+    <div class="header">
+        <a href="/myinfo" class="info-button">내정보</a>
+        <h1>거래 내역</h1>
+    </div>
 
     <div class="search-form">
         <form action="/myinfo/history" method="GET">
-            <input type="text" name="search" placeholder="Search by stock name" value="<%= typeof search_keyword !== 'undefined' ? search_keyword : '' %>">
+            <input type="text" name="search" placeholder="종목명으로 검색" value="<%= typeof search_keyword !== 'undefined' ? search_keyword : '' %>">
             <input type="date" name="start_date" class="date-input" placeholder="Start Date" value="<%= typeof start_date !== 'undefined' ? start_date : '' %>">
             <input type="date" name="end_date" class="date-input" placeholder="End Date" value="<%= typeof end_date !== 'undefined' ? end_date : '' %>">
             <button type="submit" class="search-button">Search</button>

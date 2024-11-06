@@ -19,7 +19,7 @@ async function createTransactions(sellOrderId, buyOrderId, stockCode, price, qua
     );
 }
 
-async function completOrder(orderId) {
+async function completOrder(orderId) {  
     await query(`
         UPDATE \`order\`
         SET quantity = 0, status = 'EXECUTED'
@@ -175,7 +175,6 @@ async function executeBuyOrder(orderId) {
     // Update buyer(current orderer)'s account balance
     if (order.price_type === 'LIMIT') {
         const redundantAmount = Number(order.price) * (Number(order.quantity) - remainQuantity) - totalTransactionAmount;
-        console.log("redundantAmout:", redundantAmount);
         await query(`
             UPDATE account SET account_balance = account_balance + ? WHERE account_id = ?`,
             [redundantAmount, order.account_id]
@@ -242,9 +241,10 @@ async function executeSellOrder(orderId) {
             remainQuantity = 0;
         }
 
-        // Create transaction data in database
         const transactionAmount = Number(buyOrder.price) * Number(transactionQuantity);
         currentPrice = buyOrder.price;
+        
+        // Create transaction data in database
         await createTransactions(buyOrder.order_id, orderId, order.stock_code, buyOrder.price, transactionQuantity);
 
         // Update buyer's has_stock info

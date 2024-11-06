@@ -31,15 +31,38 @@
             padding: 8px 16px;
             font-size: 16px;
         }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .home-button {
+            position: absolute;
+            left: 0;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .home-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
-    <h1>거래 가능 종목</h1>
+    <div class="header">
+        <a href="/" class="home-button">홈</a>
+        <h1>거래 가능 종목</h1>
+    </div>
 
     <div class="search-form">
         <form action="/stock" method="GET">
-            <input type="text" name="search" placeholder="Search by stock name" value="<%= typeof search_keyword !== 'undefined' ? search_keyword : '' %>">
-            <button type="submit" class="search-button">Search</button>
+            <input type="text" name="search" placeholder="종목명으로 검색" value="<%= typeof search_keyword !== 'undefined' ? search_keyword : '' %>">
+            <button type="submit" class="search-button">검색</button>
         </form>
     </div>
 

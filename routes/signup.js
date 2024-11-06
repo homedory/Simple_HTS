@@ -31,7 +31,7 @@ router.post("/", async (req, res) => {
             INSERT INTO
             account(user_id, password, account_balance, created_at)
             VALUES(?, ?, ?, ?)`,
-            [userId, password, 0, currentDateTime]
+            [userId, accountPassword, 0, currentDateTime]
         );
 
         res.redirect(`/login`);

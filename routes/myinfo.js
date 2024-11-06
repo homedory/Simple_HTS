@@ -74,14 +74,7 @@ router.post("/deposit", async (req, res) => {
     const {amount} = req.body;
 
     try {
-        const results = await query('SELECT account_balance FROM account WHERE user_id = ?', [req.session.userID]);
-        
-        let balance = 0;
-        if (results.length === 1) {
-            balance = results[0].account_balance;
-        }
-
-        await query('UPDATE account SET account_balance = account_balance + ? WHERE user_id = ?', [amount, req.session.userID]);
+        query('UPDATE account SET account_balance = account_balance + ? WHERE user_id = ?', [amount, req.session.userID]);
 
         req.session.message = "Deposit successful";
         req.session.withdrawalResult = 'success';
@@ -173,7 +166,6 @@ router.get("/history", async (req, res) => {
         if (search_keyword) {
             transactionListQuery += ' AND name LIKE ?';
             queryParams.push(`%${search_keyword}%`);
-            console.log(search_keyword);
         }
 
         if (start_date) {

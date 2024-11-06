@@ -54,6 +54,7 @@
         <% } else { %>
             <button id="myinfo" class="button">내정보</button>
             <button id="logout" class="button">로그아웃</button>
+            <button id="userdelete" class="button">회원탈퇴</button>
         <% } %>
         <button id="stock" class="button">거래가능한 종목 보기</button>
         <button id="topRising" class="button">주가 상승률 순위</button>
@@ -66,6 +67,7 @@
         const signupButton = document.getElementById("signup");
         const myinfoButton = document.getElementById("myinfo");
         const logoutButton = document.getElementById("logout");
+        const userdeleteButton = document.getElementById("userdelete");
         const allStocksButton = document.getElementById("stock");
         const topRisingButton = document.getElementById("topRising");
 
@@ -75,6 +77,9 @@
             });
             logoutButton.addEventListener("click", () => {
                 window.location = "http://localhost:3000/logout";
+            });
+            userdeleteButton.addEventListener("click", () => {
+                window.location = "http://localhost:3000/userdelete";
             });
         } else {
             loginButton.addEventListener("click", () => {

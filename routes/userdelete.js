@@ -37,7 +37,15 @@ router.post("/", async (req, res) => {
             ['INACTIVE', req.session.userID]
         );
 
-        res.redirect("/");
+        req.session.destroy((err) => {
+            if (err) {
+                console.error("Failed to destroy session", err);
+                return res.redirect("/");
+            }
+            
+            res.redirect("/");
+        });
+
     }
     catch (error) {
         console.error("DB error:", error);

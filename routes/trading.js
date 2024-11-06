@@ -58,7 +58,6 @@ router.post("/buy-order/:stock_code", async (req, res) => {
                 [accountInfo.account_id, stockCode, currentDateTime, quantity, 'BUY', priceType, price, 'UNEXECUTED']
             );
 
-            console.log("buy order: decrement balance", Number(price)*Number(quantity));
             // Decrement available balance
             const result = await query(`
                 UPDATE account
@@ -66,11 +65,6 @@ router.post("/buy-order/:stock_code", async (req, res) => {
                 WHERE account_id = ?`,
                 [Number(price)*Number(quantity), accountInfo.account_id]
             );
-
-            console.log(result);
-
-            const [balanceAfterUpdate] = await query(`SELECT account_balance FROM account WHERE account_id = ?`, [accountInfo.account_id]);
-            console.log("Balance after update:", balanceAfterUpdate.account_balance);
         }
 
         await executeBuyOrder(results.insertId);

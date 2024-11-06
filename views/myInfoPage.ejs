@@ -26,9 +26,26 @@
             font-size: 16px;
             cursor: pointer;
         }
+        .home-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .home-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
+
+    <a href="/" class="home-button">홈</a>
 
     <% if (typeof requestResponse !== 'undefined' && requestResponse === 'fail') { %>
         <script>alert("<%= message %>");</script>
@@ -42,7 +59,7 @@
         <h2>인출</h2>
         <form action="/myinfo/withdrawal" method="POST">
             <input type="number" name="amount" placeholder="인출 금액을 입력하세요" 
-                   min="0" step="1000" required>
+                   min="0" required>
             <button type="submit">인출</button>
         </form>
     </div>
@@ -51,7 +68,7 @@
         <h2>입금</h2>
         <form action="/myinfo/deposit" method="POST">
             <input type="number" name="amount" placeholder="입금 금액을 입력하세요" 
-                   min="0" step="1000" required>
+                   min="0" required>
             <button type="submit">입금</button>
         </form>
     </div>
